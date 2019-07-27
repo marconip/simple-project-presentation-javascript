@@ -1,0 +1,112 @@
+﻿<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Title of your project</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e5e5e5;
+            background-image: url(img/core-layout-1.jpg);
+            background-repeat: no-repeat;
+            background-position: top center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95px;
+            height: 55px;
+            position: fixed;
+            top: 50%;
+            right: -105px;
+            transform: translateY(-50%);
+            z-index: 9;
+            padding: 0 10px;
+            border-radius: 5px;
+            background: #fff;
+            box-shadow: 0px 0px 4px rgb(0, 0, 0, .4);
+            opacity: 0.5;
+            transition: .35s;
+        }
+
+        nav:hover {
+            right: -5px;
+            opacity: 1;
+        }
+
+        a {
+            text-decoration: none;
+            font-size: 2.5rem;
+            color: #555;
+            align-self: normal;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="javascript:void(0)" id="voltar">&#171;</a>
+        <span></span>
+        <a href="javascript:void(0)" id="proximo">&#187;</a>
+    </nav>
+
+    <script>
+        maximoImage = 4; //ENTER HERE THE NUMBER OF IMAGENS TO DISPLAY (QUANTITY IN IMG FOLDER)
+
+        var body = document.querySelector('body');
+        var voltar = document.getElementById('voltar');
+        var proximo = document.getElementById('proximo');
+        var numero = 1;
+
+        document.querySelector('span').innerHTML = `1 de ${maximoImage}`;
+        body.style.backgroundImage = `url(img/img${numero}.jpg)`;
+
+        window.onload = function () {
+            carregarImagem()
+        }
+
+        body.onkeyup = function (e) {
+            if (e.code == 'ArrowRight') {
+                proximo.click();
+            }
+            else if (e.code == "ArrowLeft") {
+                voltar.click();
+            }
+        }
+
+        voltar.addEventListener('click', function () {
+            if (numero > 1) {
+                numero--
+                carregarImagem()
+            }
+        })
+
+        proximo.addEventListener('click', function () {
+            if (numero < maximoImage) {
+                numero++
+                carregarImagem()
+            }
+        })
+
+        function carregarImagem() {
+            var img = document.createElement('img')
+            img.src = `img/img${numero}.jpg`
+
+            img.onload = function () {
+                body.style.height = `${img.height}px`
+                body.style.backgroundImage = `url(img/img${numero}.jpg)`
+                document.querySelector('span').innerHTML = `${numero} de ${maximoImage}`
+                body.scrollTop = document.documentElement.scrollTop = 0
+            }
+        }
+    </script>
+
+</body>
+
+</html>
