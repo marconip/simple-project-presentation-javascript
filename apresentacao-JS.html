@@ -4,13 +4,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Title of your project</title>
+    <title>Project Title</title>
     <style>
         body {
+            font-family: Arial, Helvetica, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #e5e5e5;
-            background-image: url(img/core-layout-1.jpg);
             background-repeat: no-repeat;
             background-position: top center;
         }
@@ -64,9 +64,6 @@
         var proximo = document.getElementById('proximo');
         var numero = 1;
 
-        document.querySelector('span').innerHTML = `1 de ${maximoImage}`;
-        body.style.backgroundImage = `url(img/img${numero}.jpg)`;
-
         window.onload = function () {
             carregarImagem()
         }
@@ -96,11 +93,11 @@
 
         function carregarImagem() {
             var img = document.createElement('img')
-            img.src = `img/img${numero}.jpg`
+            img.src = `img/img (${numero}).jpg`
 
             img.onload = function () {
                 body.style.height = `${img.height}px`
-                body.style.backgroundImage = `url(img/img${numero}.jpg)`
+                body.style.backgroundImage = `url('img/img (${numero}).jpg')`
                 document.querySelector('span').innerHTML = `${numero} de ${maximoImage}`
                 body.scrollTop = document.documentElement.scrollTop = 0
             }
