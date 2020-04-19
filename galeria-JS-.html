@@ -1,0 +1,243 @@
+﻿<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>image gallery</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            width: 150px;
+            height: 100%;
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            z-index: 9;
+            color: #999;
+
+        }
+
+        nav:hover ul {
+            opacity: 1;
+        }
+
+        ul {
+            max-width: 60px;
+            height: 100%;
+            list-style: none;
+            margin: 0px;
+            padding: 0;
+            background: #333;
+            box-shadow: 0px 0px 4px rgb(0, 0, 0, .4);
+            opacity: 0;
+            transition: .50s;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 38px;
+            text-align: center;
+            border-bottom: 1px solid #555;
+            padding: 5px;
+        }
+
+        span {
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 10px 0px;
+        }
+
+        a {
+            font-size: 2.0rem;
+            text-decoration: none;
+            width: 100%;
+            color: #888;
+        }
+
+        a:hover {
+            color: #ccc;
+        }
+
+        #tocar,
+        #parar {
+            font-size: 1.0rem;
+        }
+
+        #tcheia {
+            font-size: 1.4rem;
+        }
+
+        #tcheia::before {
+            content: "↔";
+            position: absolute;
+            right: 13px;
+        }
+
+        #parar,
+        #fim {
+            display: none;
+            color: white;
+        }
+
+        #reiniciar {
+            font-size: 1.5rem;
+        }
+
+        img {
+            height: 100%;
+            width: auto;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <ul>
+            <li>
+                <span></span>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="voltar" title="Voltar">&#171;</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="tocar" title="Apresentação">►</a>
+                <a href="javascript:void(0)" id="parar" title="Parar">❚❚</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="proximo" title="Próximo">&#187;</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="reiniciar" title="Reiniciar">■</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="configuracoes" title="Digitar Número de imagens">¤</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="tcheia" title="Tela cheia">↕</a>
+            </li>
+            <li id="fim">
+                <i>FIM</i>
+            </li>
+        </ul>
+    </nav>
+
+    <script>
+        var maximoImage = parseInt(prompt("Quantas imagens serão exibidas?"));
+        var body = document.querySelector('body');
+        var tocar = document.getElementById('tocar');
+        var reiniciar = document.getElementById('reiniciar');
+        var voltar = document.getElementById('voltar');
+        var proximo = document.getElementById('proximo');
+        var parar = document.getElementById('parar');
+        var conf = document.getElementById('configuracoes');
+        var tCheia = document.getElementById('tcheia');
+        var img = document.createElement('img');
+        var numero = 1;
+        let interval;
+
+        window.onload = function () {
+            carregarImagem()
+        }
+
+        tocar.addEventListener('click', function () {
+            tocar.style.display = "none";
+            parar.style.display = "block";
+
+            if (numero == maximoImage) {
+                clearInterval(interval);
+            } else {
+                interval = setInterval(function () {
+                    proximo.click();
+                }, 2000)
+            }
+        })
+
+        parar.addEventListener('click', function () {
+            stopReiniciar()
+        })
+        reiniciar.addEventListener('click', function () {
+            stopReiniciar()
+            document.getElementById("fim").removeAttribute("style");
+            document.querySelector("ul").removeAttribute("style");
+            numero = "1";
+            carregarImagem()
+        })
+
+        body.onkeyup = function (e) {
+            if (e.code == 'ArrowRight') {
+                proximo.click();
+            }
+            else if (e.code == "ArrowLeft") {
+                voltar.click();
+            }
+        }
+
+        voltar.addEventListener('click', function () {
+            if (numero > 1) {
+                numero--
+                carregarImagem()
+            }
+        })
+
+        proximo.addEventListener('click', function () {
+            if (numero < maximoImage) {
+                numero++
+                carregarImagem()
+            }
+        })
+
+        conf.addEventListener('click', function () {
+            location.reload()
+        })
+
+        tCheia.addEventListener('click', function () {
+            body.requestFullscreen();
+        })
+
+        function stopReiniciar() {
+            parar.style.display = "none";
+            tocar.style.display = "block";
+            clearInterval(interval);
+        }
+
+        function carregarImagem() {
+            document.querySelector('span').innerHTML = `${numero} de ${maximoImage}`
+            img.src = `img/img (${numero}).jpg`
+
+            img.onerror = function (e) {
+                voltar.click();
+                stopReiniciar()
+                alert(`Imagem número ${maximoImage} não foi encontrado!`);
+            };
+
+            body.appendChild(img);
+
+            if (numero == maximoImage) {
+                document.getElementById("fim").style.display = "flex";
+                document.querySelector("ul").style.opacity = "1";
+                stopReiniciar()
+            }
+        }
+    </script>
+
+</body>
+
+</html>
